@@ -1,44 +1,42 @@
-\documentclass[a4paper]{report}
+\documentclass[a4paper, 11pt]{report}
 
 %====================== PACKAGES ======================
 
-\usepackage[french]{babel}
+\usepackage[english]{babel}
 \usepackage[utf8x]{inputenc}
-%pour gérer les positionnement d'images
+%immage psitioning management
 \usepackage{float}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage{url}
-%pour les informations sur un document compilé en PDF et les liens externes / internes
+%for informations on a compiled PDF file and external/internal links
 \usepackage{hyperref}
-%pour la mise en page des tableaux
+%for array layout setup
 \usepackage{array}
 \usepackage{tabularx}
-%pour utiliser \floatbarrier
+%to use \floatbarrier
 %\usepackage{placeins}
 %\usepackage{floatrow}
-%espacement entre les lignes
+%interline spacing
 \usepackage{setspace}
-%modifier la mise en page de l'abstract
+%modify abstract layout
 \usepackage{abstract}
-%police et mise en page (marges) du document
+%font and margins of the document
 \usepackage[T1]{fontenc}
 \usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
-%Pour les galerie d'images
+%For images galerie
 \usepackage{subfig}
 
-%====================== INFORMATION ET REGLES ======================
+%====================== INFORMATION ET RULESS ======================
 
 %rajouter les numérotation pour les \paragraphe et \subparagraphe
 \setcounter{secnumdepth}{4}
 \setcounter{tocdepth}{4}
 
 \hypersetup{							% Information sur le document
-pdfauthor = {Premier Auteur,
-			Deuxième Auteur,
-			Troisième Auteur,
-    		Quatrième Auteur},			% Auteurs
+pdfauthor = {Esteban Marquer,
+			Prerak Shrivastava},			% Auteurs
 pdftitle = {Nom du Projet -
 			Sujet du Projet},			% Titre du document
 pdfsubject = {Mémoire de Projet},		% Sujet
@@ -64,7 +62,7 @@ pdfstartview={FitH}}					% ajuste la page à la largueur de l'écran
 \thispagestyle{empty}
 \newpage
 
-\input{./abstract.tex}
+%\input{./abstract.tex}
 
 \tableofcontents
 \thispagestyle{empty}
