@@ -10,20 +10,90 @@
 \renewcommand{\thesection}{\@arabic\c@section}
 \makeatother
 
-\section{A first DAN implementation, towards 100\% precision and overfitting, and processing large amounts of data}
+\section{A first DAN implementation, towards 100\% precision and overfitting, and processing large amounts of data\label{annex}}
 
-\subsection{Descriptive table}
+\subsection{Description of the model}
+\begin{figure}[H]
+\begin{center}
+\begin{tabularx}{.9\textwidth}{|l|r|X|}
+	\hline 
+	{\bfseries Layer} & \multicolumn{2}{|c|}{\bfseries Output} \\ 
+	\hline 
+	Input data (128 characters) &  $N$ & {128 characters} \\ 
+	\hline 
+	Character dictionary & $N * \text{dictionary size}$ & 128 * dictionary size \\ 
+	\hline 
+	Embedding layer (output $E=128$) & $N * E$ & 128 * 128 (embeddings) \\ 
+	\hline 
+	Pooling layer (maxpool) & $E$ & 128 (max embedding) \\ 
+	\hline 
+	Multilayer Perceptron (layer 1) & $h_1$ & 128 \\ 
+	\hline 
+	Multilayer Perceptron (layer 2) & $h_2$ & 128 \\ 
+	\hline 
+	Multilayer Perceptron (layer 3) & $N * \text{dictionary size}$ & 128 * dictionary size \\ 
+	\hline 
+	Softmax & $N * \text{dictionary size}$ & 128 * dictionary size (probability distribution over the character dictionary) \\ 
+	\hline 
+\end{tabularx} 
+\end{center}
+%légende de l'image
+\caption{Basic architecture of the DAN model from the PAPUD project}
+\end{figure} 
 
-\subsection{A few results ? / Current status}
+Between each layer of MLP we are using the ReLU activation function.
 
-\subsection{From (brief description of the old model)}
+A simpler version of this model (with only the last layer of the MLP) was developed and used for the previous step of the PAPUD project. It has been tested and improved since the beginning of our project.
 
-\subsection{To (Future plans, 100\% precision and overfitting)}
+\subsection{Current status}
+We have successfully used and updated the previous model on the industrial dataset and atteined convergence (the loss is stable). However, the current model has a precision similar if not slightly lower than the previous simpler version (about 90\%  on the industrial dataset).
+
+The current model's embedding is wrongly calibrated: we have about 64 different characters for the LANL dataset, less than 128 in the industrial dataset from the PAPUD project, and our embedding size is 128 which is way to large. This wrong parameter was overlooked in the previous development process and will be changed to a lower value of 16.
+
+\subsection{Future work}
+Our current target with this model is double:
+we want to achieve a near 100\% precision, by all means, even if it means overfitting, and we want to train the model on a large dataset of 8GiB of compressed text data. The first goal is in good progress however the current training on the large dataset of 8GiB is abnormally slow. Improving the training time is thus our short time goal.
 
 \section{A second DAN implementation, evaluation on the LANL dataset, and testing a slightly different approach}
 
-\subsection{Descriptive table}
+\subsection{Description of the model}
+\begin{figure}[H]
+	\begin{center}
+		\begin{tabularx}{.9\textwidth}{|l|r|X|}
+			\hline 
+			{\bfseries Layer} & \multicolumn{2}{|c|}{\bfseries Output} \\ 
+			\hline 
+			Input data (100 characters) &  $N = L * C$ & {100 lines * 100 characters} \\ 
+			\hline 
+			Character dictionary & $N * \text{dictionary size}$ & 100 * 100 * 64  \\ 
+			\hline 
+			Embedding layer (output $E=50$) & $N * E$ & 100 * 100 * 50 (embeddings) \\ 
+			\hline 
+			Pooling layer (maxpool) & $N * 1 * E$ & 100 * 1 * 50 (per line max embedding) \\ 
+			\hline 
+			Multilayer Perceptron (layer 1) & $h_1$ & 100 * 50 \\ 
+			\hline 
+			Multilayer Perceptron (layer 2) & $h_2$ & 100 * 50 \\ 
+			\hline 
+			Multilayer Perceptron (layer 3) & $C * \text{dictionary size}$ & 100 * 64 \\ 
+			\hline 
+		\end{tabularx} 
+	\end{center}
+	%légende de l'image
+	\caption{Basic architecture of the DAN model for the LANL dataset}
+\end{figure} 
 
-\subsection{A few results ? / Current status}
+In the current model we are taking 100 consecutive lines and for each line the maximum character count is 100. So, In every line if the character count is less than 100 then  we are implementing space padding to make the character count of 100.
+We choose the dimension of embedding as 50 so after that layer we have an output of size [100*100*50]. Between each layer of MLP we are using an activation function like ReLU.
+%And then in the end we are calculating cross entropy loss so we don't require any softmax layer in the end of this architecture.
+Our target with this model is a 101th line in the dataset that is what we will try to predict predicting.
+To compare the output of our model with the target output, we want to calculate the loss via cross entropy loss function.
+Because we want to predict the next log line, our target should be of size [100], corresponding to the characters in the 101th line in our dataset. Each value in target is between 0 and the dictionary size minus one, that value corresponding to the character's position in the character dictionary. Finally, the output of our final layer is of size [100*64].
 
-\subsection{Towards (Future plans, evaluation on the LANL dataset)}
+
+\subsection{Current status}
+As of now we have implemented the above architecture successfully to the dataset but we are yet to calculate the accuracy on the test set of the LANL data. Till now by using this model on the LANL dataset the loss is constantly decreasing (we have not reached convergence yet).
+
+
+\subsection{Future work}
+First of all our motive would be to perfectly apply DAN model on the LANL dataset and to get good accuracy on the test data and training data.
