@@ -1,4 +1,4 @@
-\documentclass[a4paper, 11pt]{report}
+\documentclass[a4paper, 12pt]{report}
 
 %====================== PACKAGES ======================
 
@@ -27,20 +27,30 @@
 \usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
 %For images galerie
 \usepackage{subfig}
+\usepackage[numbers]{natbib}%numbers
+\usepackage{doi}
 
 %====================== INFORMATION ET RULESS ======================
 
 %rajouter les numérotation pour les \paragraphe et \subparagraphe
 \setcounter{secnumdepth}{4}
-\setcounter{tocdepth}{4}
+\setcounter{tocdepth}{3}
 
-\hypersetup{							% Information sur le document
+\hypersetup{	
+	colorlinks = true,
+	allcolors = magenta,
+	linkcolor = .,
+	citecolor = magenta,%
+	anchorcolor = .,
+	%
+	%
+						% Information sur le document
 pdfauthor = {Esteban Marquer,
 			Prerak Shrivastava},			% Auteurs
-pdftitle = {Nom du Projet -
-			Sujet du Projet},			% Titre du document
-pdfsubject = {Mémoire de Projet},		% Sujet
-pdfkeywords = {Tag1, Tag2, Tag3, ...},	% Mots-clefs
+pdftitle = {Anomaly detection with deep learning models -
+			Bibliography report},			% Titre du document
+pdfsubject = {Bibliography report},		% Sujet
+%pdfkeywords = {Tag1, Tag2, Tag3, ...},	% Mots-clefs
 pdfstartview={FitH}}					% ajuste la page à la largueur de l'écran
 %pdfcreator = {MikTeX},% Logiciel qui a crée le document
 %pdfproducer = {}} % Société avec produit le logiciel
@@ -82,17 +92,18 @@ pdfstartview={FitH}}					% ajuste la page à la largueur de l'écran
 \setcounter{page}{0}
 \newpage
 
-\input{./presentation.tex}
+\input{./introduction.tex}
 
-\input{./existant.tex}
+%\input{./anomaly_detection.tex}
  
-\input{./besoins.tex}
+\input{./nn.tex}
 
-\input{./autre_partie.tex}
+% DAN part ?
+\input{./dan.tex}
 
-\input{./resultats.tex}
+\input{./corpora.tex}
 
-\input{./bilan.tex}
+\input{./ccl.tex}
 
 \input{./annexes.tex}
 
@@ -102,8 +113,8 @@ pdfstartview={FitH}}					% ajuste la page à la largueur de l'écran
 \nocite{*}
 
 %choix du style de la biblio
-\bibliographystyle{plain}
-%inclusion de la biblio
+\bibliographystyle{plainurl} %plain, ieeetr
+%inclusion de la agsm
 \bibliography{bibliographie.bib}
 %voir wiki pour plus d'information sur la syntaxe des entrées d'une bibliographie
 

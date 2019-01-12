@@ -1,0 +1,83 @@
+\chapter{Different artificial neural network architectures and techniques}
+
+Currently, in the literature we can find a variety of neural network architectures. By "architecture" we mean the major structure of a neural network (the way the neurons are organized in layers and how these layers are connected for example). We will present here some of those architecture that can be used for anomaly detection in system logs, along with techniques used along those models.
+
+Also, as current literature shows increasingly \cite{rnn_attention_lanl}, character-level models achieve similar performance than word-level models, while managing out-of-domain data way better (it is way less likely to encounter an unknown character than to encounter a new word).
+
+\section{Multi-layer Perceptron / Fully Connected Layers}
+The first model we ought to present is the multi-layer perceptron \cite{deep_learning_book}, a very simple neural network architecture.
+It is composed of multiple layers of neurons, with every neuron of a layer connected to all the neurons of the next layers. Between each pair of layers an activation function, also called non-linearity, is added.
+
+Even if its basic concept dates of the 80s \cite{mlp} and is far from being state of the art, it is still used in more complex architectures such as the Deep Averaging Neural Network.
+
+\section{Preprocessing}
+"Preprocessing" designates all the operations applied on the data to filter inappropriate data and adapt its representation to obtain the best quality data as input for the model.
+
+For example, in \cite{lstm_cluster} various preprocessing techniques are used on the input log lines data. In particular, they use a clustering technique on the raw text from multiple log sources to extract specific information from the logs and generate sequences that it be fed into a Long and Short Term Memory Network (LSTM, described \autoref{sec:lstm}) network. By using such handcrafted feature extraction processes, they are able to improve the performance of their model by removing unnecessary information from the original data.
+
+However, handcrafted feature extraction is costly to produce, and may remove potentially useful information.
+
+In contrast to \cite{lstm_cluster}, our algorithm works almost directly on the logs, with the only preprocessing being the mapping of all the characters to numbers through an automatically generated dictionary.
+We also normalize the size of each log line, by padding them with a specific character or removing the excess characters.
+For reference, in \cite{rnn_attention_lanl} they need an additional step of tokenization using know delimiters because they are also using words and not only characters.
+
+\section{Embeddings}
+Various deep learning NLP models use word or character embeddings \cite{pooling_simple,deep_learning_book}. They are a kind of mapping that gives a way to represent efficiently the words (or character), instead of using 1-hot tensors (tensors of zeros, except for the cell corresponding to the word which is one). The mapping is either pre-trained or learned alongside the model. This way, a full dictionary can be represented with almost no loss in information in less than 200 dimensions (instead of one dimension per word). Quite the opposite in fact, as forcing a dimensionality reduction force the embedding to learn similarity between words.
+
+\section{Attention Models}
+Recently, a group of researchers have modified a LSTM (see \autoref{sec:lstm}) and are now using it with attention mechanisms in order to capture long term dependencies on the system logs \cite{rnn_attention_lanl}.
+The attention mechanisms allows us to get some insight about what factors are affecting the model’s decision, by observing which elements are selected by the attention weights. Attention mechanisms also enable to select recover information from a context, like previously seen elements, thus allowing the capture of long term dependencies.
+But, in contrast, in our model we did not use any kind of attention mechanism but rather kept it simple, because of the complexity of attention mechanisms ans the high time and resource cost they induce. To get the long term dependencies between the log lines is currently not in the scope of our project, but is rater planned as way later step in the process to answer the problematic.
+
+\section{Order-sensitivity of the model}
+One last point of interest, that will directly lead us to the architecture we will use, is whether our model should be sensitive to the order of the elements in the input data or not. This divides the architectures in two families: unordered and syntactic. Unordered means that we convert the text to a bag of word embeddings, without a care for the order of the elements, while syntactic keeps order of the input text and is thus able to discover syntactic information.
+
+For example with sentiment analysis, given a sentence like “The movie was entertaining but i don't like it very much” an unordered model like NBOW (see \autoref{sec:nbow}) will have trouble dealing with the negation in “don't like”, and thus will most probably return a positive label, which is a mistake. Syntactic aware models, like RNNs and LSTMs (see \autoref{sec:lstm}), or CNNs (see \autoref{sec:cnn}), are way more likely to handle such things.
+
+\subsection{Recurrent Neural Network (RNN) and Long and Short Term Memory Neural Network (LSTM)\label{sec:lstm}}
+RNN’s architecture of is made in such a way that it can keep track of the phrase or the words  that have appeared in the beginning of the sentence and thus can make final decision according to it. It has proven to be very efficient in many NLP applications \cite{rnn_attention_lanl,UnreasonableRNN}.
+However, with this advantage also comes the disadvantage of having a large training time and hardware use.
+The main reason is that the non-linearities and matrix/tensor products at each node of the parse tree of a RNN are expensive, especially as model dimensionality increases. 
+It also seems RNNs can sometime also struggle to deal with out of domain data.
+
+LSTMs are a variant of RNNs, more complex and more powerful, but they also requires an even larger amount of training time and computations.
+They are considered one of the state of the art in the domain \cite{LSTM}.
+
+\subsection{Convolutional Neural Network (CNN) \label{sec:cnn}}
+However, Y. Kim in his paper \cite(cnn-2) shows that Convolutional Neural Network (CNN) can deal with both the dependency problem and the out of domain data, while giving effective results with low training time and hardware constraints.
+The CNN architecture has proven its efficiency with image processing, but it still proves to be very efficient with text.
+A CNN uses a sliding window (also called kernel) that run through the data to extract local information and process it.
+CNNs can have various channels with different kernel sizes, which give very good results because those various channels can capture different important information on different scales on a single given input sentence. For example, one channel can capture information about the word structure while another can capture grammatical information.
+However, the presence of multiple channels with various sliding windows, while composed of very simple operations, cause the computational cost to increases for large amounts of data (especially if we compare the training time with the one of a DAN (see \autoref{sec:dan})).
+\cite{deep_learning_book, cnn-1}
+
+\subsection{Neural Bag of Word (NBOW) \label{sec:nbow}}
+The NBOW model just contains 4 major steps that are defined as follows \cite{bow}:
+\begin{enumerate}
+	\item the conversion of text into tokens
+	\item the conversion of tokens into embeddings
+	\item the model average out the embedding which produces a vector “z”
+	\item it performs a softmax (operation that transform a set of values into a probability distribution) on “z” to get the probability of the labels
+\end{enumerate}
+
+During training, we apply the cross-entropy function to calculate the error and back-propagate the error throughout the model.
+Due to being composed of very simple functions (embedding, averaging, softmax), the NBOW model is quite simple and fast to train.
+
+We have explained NBOW model here because it will serve as a baseline for DAN model because DAN is simply a modification of NBOW model
+
+\subsection{Deep Averaging Neural Network \label{sec:dan}}
+The Deep Averaging Network \cite{dan_1, dan_2} model works in 3 simple steps that are described as follows 
+\begin{enumerate}
+	\item take the vector average of the embeddings associated with an input sequence of tokens
+	\item pass that average through one or more feed-forward layers
+	\item perform a (linear) classification on the final layer representation (in our project, this step is replaced by the generation of the next log line)
+\end{enumerate}
+
+An advantage of the DAN model is its high processing speed.
+Deep Averaging Network is a modification of an NBOW (Neural Bag Of Words Model), by adding the linear classification step to the model.
+
+\section*{Choice of DAN}
+
+Although syntactic composition is very useful to obtain powerful models for example with LSTM, it requires a long training and expensive computations thus slows down the process. In our case, the dataset is very huge so such costs aren't really affordable.
+Even if CNN offer a less thorough syntactic composition support, they still require a larger amount of resources than DAN. However, with CNN the cost seem more affordable.
+Furthermore, DAN network can also be trained on various types of data without the need of large amount of pre-processing and also can be applied to the data with high syntactic variance.

@@ -3,6 +3,27 @@
 %Rajouter la ligne "Annexes" dans le sommaire
 \addcontentsline{toc}{part}{Annexes}
 
-\input{./annexe1.tex}
+\chapter*{Annexe A: Current implementations}
 
-\input{./annexe2.tex}
+%changer le format des sections, subsections pour apparaittre sans le num de chapitre
+\makeatletter
+\renewcommand{\thesection}{\@arabic\c@section}
+\makeatother
+
+\section{A first DAN implementation, towards 100\% precision and overfitting, and processing large amounts of data}
+
+\subsection{Descriptive table}
+
+\subsection{A few results ? / Current status}
+
+\subsection{From (brief description of the old model)}
+
+\subsection{To (Future plans, 100\% precision and overfitting)}
+
+\section{A second DAN implementation, evaluation on the LANL dataset, and testing a slightly different approach}
+
+\subsection{Descriptive table}
+
+\subsection{A few results ? / Current status}
+
+\subsection{Towards (Future plans, evaluation on the LANL dataset)}
