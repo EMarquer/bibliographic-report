@@ -1,8 +1,6 @@
 \chapter{Corpora used}
 
 \section{The original corpora: the industrial dataset from the PAPUD project}
-Just a few lines to present the industrial corpus
-
 The data from the PAPUD project is given to us by industrial partners of the project (BULL-ATOS). It is a set of system log files from their servers, which in total amount to more than 400GiB of compressed data; we are currently using a small subset of this data for our model.
 
 The data from that dataset is confidential. Thus, the example we present in \autoref{tab:indu} has been altered.
@@ -26,11 +24,11 @@ The data from that dataset is confidential. Thus, the example we present in \aut
 		\end{tabularx} 
 	\end{center}
 	%légende de l'image
-	\caption{Log line example from the industrial dataset, the full line has been abbreviated \label{tab:indu}}
+	\caption{Log line example from the industrial dataset (the full line has been abbreviated) \label{tab:indu}}
 \end{figure}
 
 \subsection{Preprocessing}
-As mentioned in \autoref{sec:preprocess}, we try to do as little preprocessing on the data as possible. However, for the industrial data, our preprocessing (which was designed in a previous part of the project on the same data), is non-negligible.
+As mentioned in \autoref{sec:preprocess} (\autopageref{sec:preprocess}), we try to do as little preprocessing on the data as possible. However, for the industrial data, our preprocessing (which was designed in a previous part of the project on the same data), is non-negligible.
 \newpage
 The complete preprocessing is as follows:
 \begin{enumerate}
@@ -60,12 +58,12 @@ An example from the article \cite{rnn_attention_lanl} is presented in \autoref{t
 	Destination user &U7@D2\\
 	Source PC&C6\\
 	Destination PC&C6\\
-	Authentication type&Negociate\\
+	Authentication type&Negotiate\\
 	Logon type&Batch\\
 	Autentication orientation&LogOn\\
 	Success/Failure& Success\\ 
 	\hline 
-	\multicolumn{2}{|c|}{1,C6@D1,U7@D2,C6,C6,Negociate,Batch,LogOn,Success} \\ 
+	\multicolumn{2}{|c|}{1,C6@D1,U7@D2,C6,C6,Negotiate,Batch,LogOn,Success} \\ 
 	\hline 
 \end{tabularx} 
 \end{center}
@@ -77,11 +75,11 @@ These log lines have been generated from desktop PC and active directory servers
 We use this dataset to test our model on intermediate- to large-size training dataset, with a simpler structure than the industrial dataset we got, with two objectives in mine: to use a simpler dataset to improve our model, and to compare the performance of our model on the LANL and industrial dataset.
 
 \subsection{Preprocessing}
-As mentioned in \autoref{sec:preprocess}, we do very little preprocessing on the data from the LANL database, with only tree very simple process:
+As mentioned in \autoref{sec:preprocess} (\autopageref{sec:preprocess}), we do very little preprocessing on the data from the LANL database, with only tree very simple process:
 \begin{enumerate}
 	\item we remove the Timestamp field;
 	\item we normalize all the lines to a length of 126 characters, by removing the excess characters and padding the shorter lines with a specific padding character;
 	\item we map of all the characters to numbers through an automatically generated dictionary.
 \end{enumerate}
 
-Note that in \cite{rnn_attention_lanl}, they keep the timestamp information int the log line. However, we do not use them in our model as they do not interest us for now, and due to a consistency concern with the processing we do on the industrial dataset.
+Note that in \cite{rnn_attention_lanl}, they keep the timestamp information in the log line. However, we do not use them in our model as they do not interest us for now, and due to a consistency concern with the processing we do on the industrial dataset.

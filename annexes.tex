@@ -3,7 +3,7 @@
 %Rajouter la ligne "Annexes" dans le sommaire
 \addcontentsline{toc}{part}{Annexes}
 
-\chapter*{Annexe A: Current implementations}
+\chapter*{Annex A: Current implementations}
 
 %changer le format des sections, subsections pour apparaittre sans le num de chapitre
 \makeatletter
@@ -46,9 +46,9 @@ Between each layer of MLP we are using the ReLU activation function.
 A simpler version of this model (with only the last layer of the MLP) was developed and used for the previous step of the PAPUD project. It has been tested and improved since the beginning of our project.
 
 \subsection{Current status}
-We have successfully used and updated the previous model on the industrial dataset and atteined convergence (the loss is stable). However, the current model has a precision similar if not slightly lower than the previous simpler version (about 90\%  on the industrial dataset).
+We have successfully used and updated the previous model on the industrial dataset and attained convergence (the loss is stable). However, the current model has a precision similar if not slightly lower than the previous simpler version (about 90\%  on the industrial dataset).
 
-The current model's embedding is wrongly calibrated: we have about 64 different characters for the LANL dataset, less than 128 in the industrial dataset from the PAPUD project, and our embedding size is 128 which is way to large. This wrong parameter was overlooked in the previous development process and will be changed to a lower value of 16.
+The current model's embedding is wrongly calibrated: we have about 64 different characters for the LANL dataset, less than 128 in the industrial dataset from the PAPUD project, and our embedding size is 128 which is way to large. This wrong parameter was overlooked in the previous development process and will be changed to a lower value of 16 or 32.
 
 \subsection{Future work}
 Our current target with this model is double:
